@@ -33,7 +33,7 @@ import com.mongodb.WriteConcern;
  * 
  */
 @Configuration
-@EnableMongoRepositories(basePackages = "com.immostar.domain")
+@EnableMongoRepositories(basePackages = "com.immostar.repository")
 public class MongoConfig extends AbstractMongoConfiguration {
     @Inject
     private Environment environment;
@@ -50,7 +50,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public String getMappingBasePackage() {
-        return "com.jiwhiz.blog.domain";
+        return "com.immostar.domain";
     }
 
     @Override

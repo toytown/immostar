@@ -19,12 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.immostar.domain.RealState;
+import com.immostar.domain.SearchRequest;
+import com.immostar.utils.PageWrapper;
 import com.immostar.web.AbstractPublicPageController;
 
 /**
@@ -46,10 +52,27 @@ public class HomeController extends AbstractPublicPageController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(Model uiModel, HttpServletRequest request) {
       
-
-        return "site/home";
+    	return "site/home";
     }
 
+
+    /**
+     * Simply selects the home view to render by returning its name.
+     */
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String search(@ModelAttribute("searchRequest") SearchRequest searchRequest, Model uiModel) {
+
+    	PageRequest pageReq = new PageRequest(0, 100);
+    	Page<RealState> results = realStateService.findBySearchRequest(searchRequest, pageReq);
+    	PageWrapper<RealState> page = new PageWrapper<RealState>(results, "/results");
+    	
+    	for (RealState realState : results) {
+			System.out.println(realState);
+		}
+    	uiModel.addAttribute("page", results);
+    	return "listing/properties-list";
+    }
+    
     @RequestMapping(value = "/about", method = RequestMethod.GET)
     public String about(Model uiModel, HttpServletRequest request) {
      

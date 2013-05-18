@@ -1,159 +1,47 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:tiles="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org"
-      lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org" lang="en">
+
 <head>
-
-<title>Welcome to Jiwhiz Blog Website</title>
 <meta charset="utf-8" />
+<title>Homepage | Realto</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta content="Realto" name="description" />
+<meta content="favethemes" name="author" />
 
-<!-- Le styles -->
-<link href="../../../resources/css/bootstrap-2.3.1.css" rel="stylesheet" type="text/css"/>
-<link href="../../../resources/css/font-awesome-3.0.0.css" rel="stylesheet" type="text/css"/>
-<link href="../../../resources/css/icon-style.css" rel="stylesheet" type="text/css"/>
-<link href="../../../resources/css/application.css" rel="stylesheet" type="text/css"/>
-<link href="../../../resources/css/bootstrap-responsive-2.3.1.css" rel="stylesheet" type="text/css"/>
+<!-- CSS Styles  -->
+<link href="../../resources/css/bootstrap.css" rel="stylesheet" />
+<link href="../../resources/css/bootstrap-responsive.css" rel="stylesheet" />
+<link href="../../resources/css/font-awesome.min.css" rel="stylesheet" />
+<link href="../../resources/css/colors.css" rel="stylesheet" />
+<link href="../../resources/css/style.css" rel="stylesheet" />
 
+<!-- Favicon and touch icons  -->
+<link href="../../resources/ico/apple-touch-icon-144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144" />
+<link href="../../resources/ico/apple-touch-icon-114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114" />
+<link href="../../resources/ico/apple-touch-icon-72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72" />
+<link href="../../resources/ico/apple-touch-icon-57-precomposed.png" rel="apple-touch-icon-precomposed" />
+<link href="../../resources/ico/favicon.png" rel="shortcut icon" />
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      	<script src="../../resources/js/html5shiv.js"></script>
+    	<![endif]-->
 </head>
 
-<body>
-	<!-- Top Fixed Menu-bar -->
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-				</button>
-				<a class="brand" href="home.html">Jiwhiz Blog</a>
-				<div class="nav-collapse collapse">
-					<ul class="nav pull-right">
-						<li class="active"><a href="home.html"><i class="icon-home"></i> Home</a></li>
-						<li><a href="blogs.html"><i class="icon-th-list"></i> Blog</a></li>
-						<li><a href="about.html"><i class="icon-info-sign"></i> About</a></li>
-						<li><a href="contact.html"><i class="icon-phone"></i> Contact</a></li>
-						<li><a href="signin.html"><i class="icon-signin"></i> Sign In</a></li>
-					</ul>
-				</div>
-				<!--/.nav-collapse -->
-			</div>
-		</div>
-	</div>
+<div tiles:fragment="content">
 
-    <div class="container">
+	<!-- #latest-properties  -->
+	<div id="latest-properties" th:include="sharedLayout::latestproperties" />
 
-		<!-- Title Row -->
-		<div class="row" tiles:fragment="title">
-			<div class="hero-unit">
-				<h1>Hello, world!</h1>
-				<p>This is a demo website build by <a href="https://github.com/jiwhiz/JiwhizBlogWeb">Jiwhiz Blog Web Application</a></p>
-				<p>
-					<a href="about.html" th:href="@{/about}" class="btn btn-primary">Learn more &raquo;</a>
-				</p>
-			</div>
-		</div>
 
-		<!-- Main Content Row -->
-		<div class="row">
-			<div class="span12" id="content">
-				<div class="row">
-					<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-					<!-- START of the content to be included in the execution result.  -->
-					<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-					<div class="span9" tiles:fragment="content">
-					
-						<!-- Main Content Row for latest blog -->
-						<div class="row post" th:if="${latestBlog ne null}">
-							<div class="post-content-meta">
-								<h4>
-									<span th:text="${latestBlog.publishedDateString}">22 October, 2012</span>
-								</h4>
-								<h2>
-									<a href="post.html" th:href="@{'/post/' + ${latestBlog.fullPublishedPath}}"><span
-										th:text="${latestBlog.title}">Most Recent Blog Title</span></a>
-								</h2>
-								<p>
-									Published by <strong><a href="#" th:href="@{'/profile/' + ${latestBlog.authorId}}" 
-											th:text="${latestBlog.authorName}">John Doe</a>  </strong> 
-									on <span th:text="${latestBlog.publishedDateString}">22 October, 2012</span>
-									at <span th:text="${latestBlog.publishedTimeString}">4:52:48 AM</span> 
-									| <span class="post-comment-count"> 
-										<a href="display.html#comments" th:href="@{'/post/' + ${latestBlog.fullPublishedPath} + '#comments'}" >
-										<i class="icon-comments"></i> 
-										<span th:text="${latestBlog.commentCount}">3</span> Comments
-										</a>
-									</span>
-								</p>
-							</div>
-							<div class="post-content-body">
-								<span th:utext="${latestBlog.content}">
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consectetur dui eu quam imperdiet
-										elementum. Vivamus viverra, ante sed cursus ullamcorper, sem eros molestie leo, vitae suscipit ipsum est sed
-										elit. Donec elementum, magna non scelerisque dignissim, est dui semper lorem, vitae aliquet libero augue in
-										diam. Nullam bibendum facilisis tincidunt. Aenean condimentum imperdiet enim, ac tincidunt tortor lobortis
-										posuere. Phasellus vel purus diam, sed sollicitudin purus. In ut ligula vitae libero auctor placerat. Integer
-										pulvinar fringilla tellus, a egestas lacus malesuada in. Proin vestibulum, augue a interdum mattis, dui dui
-										porttitor felis, vitae placerat erat ante ut eros. <a href="single.html">Read more &raquo;</a>
-								</span>
-							</div>
-							<div class="post-footer">
-								<div class="post-tags">
-									<span th:each="tag : ${latestBlog.tags}"><a href="#"><span class="label label-info"
-											th:text="${tag}">Java</span></a> </span>
-								</div>
-								<p>
-									Published by <strong><a href="userProfile.html" th:href="@{'/profile/' + ${latestBlog.authorId}}" 
-											th:text="${latestBlog.authorName}">John Doe</a>  </strong> 
-									on <span th:text="${latestBlog.publishedDateString}">22 October, 2012</span>
-									at <span th:text="${latestBlog.publishedTimeString}">4:52:48 AM</span> 
-									| <span class="post-comment-count"> 
-										<a href="post.html#comments" th:href="@{'/post/' + ${latestBlog.fullPublishedPath} + '#comments'}" >
-											<i class="icon-comments"></i> 
-											<span th:text="${latestBlog.commentCount}">3</span> Comments
-										</a>
-									</span>
-								</p>
+	<!-- #latest-properties  -->
+	<div class="container" th:include="sharedLayout::containerRowFirst" />
+	<div class="container" th:include="sharedLayout::containerRowSecond" />
+	<div class="container" th:include="sharedLayout::containerRowThird" />
 
-							</div>
-						</div> <!-- /row : blog post content row -->
-						
-					</div>
-					<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-					<!-- END of the content to be included in the execution result -->
-					<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+</div>
 
-					<!-- Side bar at right -->
-					<div class="span3">
-						Side bar
-					</div>
 
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /span12 : end of main content -->
-		</div>
-		<!-- /row -->
-
-		<!-- Footer Row -->
-		<div class="row">
-			<div class="span12">
-				<div class="copyright">
-					<span>&copy; All right reserved.</span>
-				</div>
-			</div>
-		</div>
-
-	</div>
-	<!-- /container -->
-	
-	<!-- Le javascript
-    ================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script type="text/javascript" src="../../../resources/js/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="../../../resources/js/bootstrap-2.3.1.js"></script>
-	
-
-</body>
 
 </html>

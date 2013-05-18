@@ -29,12 +29,14 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableArgumentResolver;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ServletWebArgumentResolverAdapter;
 import org.springframework.web.servlet.view.tiles2.TilesConfigurer;
@@ -48,85 +50,104 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 /**
  * 
  * @author Yuan Ji
- *
+ * 
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.immostar.web")
+@ComponentScan(basePackages = "com.immostar")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Inject
-    private Environment environment;
+	@Inject
+	private Environment environment;
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        PageableArgumentResolver resolver = new PageableArgumentResolver();
-        resolver.setFallbackPagable(new PageRequest(1, 10));
-        argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
-    }
+	@Override
+	public void addArgumentResolvers(
+			List<HandlerMethodArgumentResolver> argumentResolvers) {
+		PageableArgumentResolver resolver = new PageableArgumentResolver();
+		resolver.setFallbackPagable(new PageRequest(1, 10));
+		argumentResolvers.add(new ServletWebArgumentResolverAdapter(resolver));
+	}
 
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "/",
                         "classpath:/META-INF/web-resources/");
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
+        registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(31556926);
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/").setCachePeriod(31556926);
         registry.addResourceHandler("/robots.txt").addResourceLocations("/");
     }
 
-    public Validator getValidator() {
-        LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
-        factory.setValidationMessageSource(messageSource());
-        return factory;
-    }
+	public Validator getValidator() {
+		LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
+		factory.setValidationMessageSource(messageSource());
+		return factory;
+	}
 
-    /**
-     * Messages to support internationalization/localization.
-     * TODO: move messages and application text to property files.
-     */
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames(new String[] { "WEB-INF/i18n/messages", "WEB-INF/i18n/application" });
-        return messageSource;
-    }
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasenames(new String[] { "WEB-INF/i18n/messages",
+				"WEB-INF/i18n/application" });
+		return messageSource;
+	}
 
-    // Thymeleaf config
-    @Bean
-    public ITemplateResolver templateResolver() {
-        ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-        templateResolver.setPrefix("/WEB-INF/templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML5");
-        templateResolver.setCacheable(false);
-        return templateResolver;
-    }
+	@Bean
+	public JavaMailSenderImpl mailSender() {
+		JavaMailSenderImpl javaMail = new JavaMailSenderImpl();
+		javaMail.setHost("mail.wirecard.sys");
+		return javaMail;
+	}
+	
 
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setMessageSource(messageSource());
+	
+	// Thymeleaf config
+	@Bean
+	public ITemplateResolver templateResolver() {
+		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+		templateResolver.setPrefix("/WEB-INF/templates/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode("HTML5");
+		templateResolver.setCacheable(false);
+		return templateResolver;
+	}
 
-        Set<IDialect> additionalDialects = new HashSet<IDialect>();
-        additionalDialects.add(new org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect());
-        additionalDialects.add(new org.thymeleaf.extras.tiles2.dialect.TilesDialect());
-        additionalDialects.add(new org.thymeleaf.extras.conditionalcomments.dialect.ConditionalCommentsDialect());
-        templateEngine.setAdditionalDialects(additionalDialects);
-        return templateEngine;
-    }
+	@Bean
+	public SpringTemplateEngine templateEngine() {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver());
+		templateEngine.setMessageSource(messageSource());
 
-    @Bean
-    public ViewResolver viewResolver() {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setViewClass(org.thymeleaf.extras.tiles2.spring.web.view.ThymeleafTilesView.class);
-        viewResolver.setTemplateEngine(templateEngine());
-        viewResolver.setCharacterEncoding("UTF-8");
-        return viewResolver;
-    }
-    
-    @Bean
-    public TilesConfigurer tilesConfigurer() {
-        ThymeleafTilesConfigurer configurer = new ThymeleafTilesConfigurer();
-        configurer.setDefinitions(new String[] { "/WEB-INF/templates/**/views.xml" });
-        return configurer;
-    }
+		Set<IDialect> additionalDialects = new HashSet<IDialect>();
+		additionalDialects
+				.add(new org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect());
+		additionalDialects
+				.add(new org.thymeleaf.extras.tiles2.dialect.TilesDialect());
+		additionalDialects
+				.add(new org.thymeleaf.extras.conditionalcomments.dialect.ConditionalCommentsDialect());
+		templateEngine.setAdditionalDialects(additionalDialects);
+		return templateEngine;
+	}
 
+	@Bean
+	public ViewResolver viewResolver() {
+		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+		viewResolver
+				.setViewClass(org.thymeleaf.extras.tiles2.spring.web.view.ThymeleafTilesView.class);
+		viewResolver.setTemplateEngine(templateEngine());
+		viewResolver.setCharacterEncoding("UTF-8");
+		return viewResolver;
+	}
+
+	@Bean
+	public TilesConfigurer tilesConfigurer() {
+		ThymeleafTilesConfigurer configurer = new ThymeleafTilesConfigurer();
+		configurer
+				.setDefinitions(new String[] { "/WEB-INF/templates/**/views.xml" });
+		return configurer;
+	}
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/").setViewName("home");
+	}
 }

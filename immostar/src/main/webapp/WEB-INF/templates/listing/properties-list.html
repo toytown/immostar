@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+
+	<div tiles:fragment="content">
+
+
+		<!-- .span8 .box-container -->
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Title</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr th:each="realState : ${page}">
+					<!-- Title, with Edit Meta link -->
+					<td>
+						<h5 th:text="${realState.title}">Post#1 Title</h5>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+</body>
+</html>

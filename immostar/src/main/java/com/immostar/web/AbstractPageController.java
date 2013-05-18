@@ -17,10 +17,15 @@ package com.immostar.web;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
+
+import com.immostar.domain.RealState;
+import com.immostar.service.interfaces.RealStateService;
 
 /**
  * 
@@ -30,6 +35,8 @@ import org.springframework.web.util.WebUtils;
 public class AbstractPageController {
 
 
+	@Autowired
+    protected RealStateService<RealState> realStateService;
     
     protected String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
         String enc = httpServletRequest.getCharacterEncoding();

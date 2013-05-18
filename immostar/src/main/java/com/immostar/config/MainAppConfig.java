@@ -21,10 +21,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 /**
- * Configuration for application services and related beans.
  * 
- * @author Yuan Ji
- * 
+ * @author tuladhap
+ *
  */
 @Configuration
 class MainAppConfig {
