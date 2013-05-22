@@ -9,6 +9,19 @@
 
 		<!-- .span8 .box-container -->
 
+		<h1>Please upload a file</h1>
+		<form method="post" action="./upload" enctype="multipart/form-data" th:action="@{/upload}">
+
+			<input type="file" name="file" /> <input type="submit" />
+		</form>
+
+		<h2>
+			List Blog Posts (<span th:text="${page.totalElements}"></span>):
+		</h2>
+
+		<!-- Pagination -->
+		<div th:include="sharedLayout::paginationbar">Pagination</div>
+		
 		<table class="table">
 			<thead>
 				<tr>
@@ -17,11 +30,11 @@
 			</thead>
 
 			<tbody>
-				<tr th:each="realState : ${page}">
+				<tr th:each="realState : ${page.content}">
 					<!-- Title, with Edit Meta link -->
 					<td>
-						<h5 th:text="${realState.title}">Post#1 Title</h5>
-						
+						<h5 th:text="${realState.title} + ${realState.id}">Post#1 Title</h5> <img src="/image/1"
+						th:src="'./image/' + ${realState.getTitleThumbNailImage()}" />
 					</td>
 				</tr>
 			</tbody>

@@ -25,6 +25,7 @@ import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
 import com.immostar.domain.RealState;
+import com.immostar.service.impl.RealStateImageService;
 import com.immostar.service.interfaces.RealStateService;
 
 /**
@@ -37,6 +38,10 @@ public class AbstractPageController {
 
 	@Autowired
     protected RealStateService<RealState> realStateService;
+	
+	@Autowired
+	protected RealStateImageService imageService;
+	
     
     protected String encodeUrlPathSegment(String pathSegment, HttpServletRequest httpServletRequest) {
         String enc = httpServletRequest.getCharacterEncoding();
